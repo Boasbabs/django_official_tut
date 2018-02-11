@@ -1,11 +1,15 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse
+from django.views import generic
 # from django.template import loader
 
-from .models import Question
+from .models import Choice, Question
 
 # Create your views here.
+
+"""
+# Basic way of handling views
 
 def index(request):
     latest_question_list = Question.objects.order_by("-pub_date")[:5]
@@ -19,13 +23,12 @@ def index(request):
 
 def detail(request, question_id):
     # raising a 404 without shortcut
-    """
-    try:
-        question = Question.objects.get(pk=question_id)
-    except Question.DoesNotExist:
-        raise Http404("Question does not exist")
+    # try:
+    #     question = Question.objects.get(pk=question_id)
+    # except Question.DoesNotExist:
+    #     raise Http404("Question does not exist")
     # return HttpResponse("You're looking at question %s." % question_id)
-    """
+    
 
     # short cut way
     question = get_object_or_404(Question, pk=question_id)
@@ -34,7 +37,28 @@ def detail(request, question_id):
 
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request,"polls/results.html", {"question":question})
+    return render(request, "polls/results.html", {"question":question})
+    
+"""
+
+
+class IndexView(generic.ListView):
+    template_name = "polls/index.html"
+    context_object_name = "latest_question_list"
+
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Question.objects.order_by("-pub_date")[:5]
+
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = "polls/detail.html"
+
+
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = "polls/results.html"
 
 
 def vote(request, question_id):
