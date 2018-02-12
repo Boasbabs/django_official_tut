@@ -1,0 +1,9 @@
+body {
+    background: #1dd1a1 no-repeat right bottom;
+    font: 16px/23px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+li a {
+    font-size: 15px;
+    color: green;
+    text-decoration: none ;
+}
